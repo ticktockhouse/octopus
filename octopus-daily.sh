@@ -24,6 +24,6 @@ UNIT_PRICE_THEN=$(http "$TARIFF_URL"/standard-unit-rates/ period_from=="$DATE_LA
 UNIT_PRICE_NEXT=$(http "$TARIFF_URL"/standard-unit-rates/ period_from=="$DATE_NEXT_HALF_HOUR" period_to=="$DATE_NEXT_HOUR" | jq .results[].value_inc_vat)
 
 
-echo "Electricity price right now is "$UNIT_PRICE_NOW"p/kWh"
 echo "Electricity price last half hour was "$UNIT_PRICE_THEN"p/kWh"
+echo "Electricity price right now is "$UNIT_PRICE_NOW"p/kWh"
 echo "Electricity price next half hour will be "$UNIT_PRICE_NEXT"p/kWh"
