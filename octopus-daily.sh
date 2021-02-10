@@ -1,3 +1,7 @@
+#!/bin/bash
+
+# NB - requires httpie and jq
+
 BASE_URL="https://api.octopus.energy"
 PRODUCT_CODE="AGILE-18-02-21"
 TARIFF_CODE="E-1R-"$PRODUCT_CODE"-C"
@@ -27,3 +31,15 @@ UNIT_PRICE_NEXT=$(http "$TARIFF_URL"/standard-unit-rates/ period_from=="$DATE_NE
 echo "Electricity price last half hour was "$UNIT_PRICE_THEN"p/kWh"
 echo "Electricity price right now is "$UNIT_PRICE_NOW"p/kWh"
 echo "Electricity price next half hour will be "$UNIT_PRICE_NEXT"p/kWh"
+
+echo "Cheapest price for the rest of the day:"
+
+http $TARIFF_URL/standard-unit-rates/ \
+    period_from=="$(date -d now -Iseconds)" period_to=="$(date -d 23:59 -Iseconds)" | \
+    jq '.results| min_by('.value_inc_vat')'
+
+echo "Cheapest price for the next 24 hours:"
+
+http $TARIFF_URL/standard-unit-rates/ \
+    period_from=="$(date -d now -Iseconds)" period_to=="$(date -d tomorrow -Iseconds)" | \
+    jq '.results| min_by('.value_inc_vat')'
