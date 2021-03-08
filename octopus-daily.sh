@@ -42,7 +42,7 @@ echo "Cheapest price before 4pm:"
 
 http $TARIFF_URL/standard-unit-rates/ \
     period_from=="$(date -d now -Iseconds)" period_to=="$(date -d 15:59 -Iseconds)" | \
-    jq '.results| min_by('.value_inc_vat')'
+    jq '.results| min_by('.value_inc_vat')' 2>/dev/null || echo -e "\nIt's after 4pm!\n"
 
 echo "Cheapest price for the next 24 hours:"
 
